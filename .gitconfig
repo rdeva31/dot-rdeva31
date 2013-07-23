@@ -1,0 +1,15 @@
+[user]
+	email = r.deva31@gmail.com
+	name = Deva Ramasubramanian
+[color]
+	ui = auto
+[core]
+	editor = vim
+[alias]
+	cp = cherry-pick
+	st = status
+	ci = commit
+	br = branch
+	co = checkout
+[rerere]
+	enabled = 1
