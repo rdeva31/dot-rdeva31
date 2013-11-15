@@ -1,3 +1,4 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =1
-let g:netrw_dirhist_1='/local/mnt/workspace/code/jb_7_1/vendor/qcom/proprietary/wfd-noship/tests/kernel-test'
+let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_1='/local/mnt/workspace/code/jb_3.2/vendor/qcom/proprietary/mm-video-noship/vidc/firmware-msm8974'
+let g:netrw_dirhist_2='/local/mnt/workspace/code/kk_11_12/hardware/qcom/media/mm-core/src/8084'

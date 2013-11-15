@@ -31,7 +31,7 @@ hi Cursor	guibg=khaki guifg=slategrey
 "hi DiffChange
 "hi DiffDelete
 "hi DiffText
-"hi ErrorMsg
+hi ErrorMsg	guibg=lightred guibg=black
 hi VertSplit	guibg=#c2bfa5 guifg=grey50 gui=none
 hi Folded	guibg=grey30 guifg=gold
 hi FoldColumn	guibg=grey30 guifg=tan
@@ -71,7 +71,7 @@ hi Todo		guifg=orangered guibg=yellow2
 hi SpecialKey	ctermfg=darkgreen
 hi NonText	cterm=bold ctermfg=darkblue
 hi Directory	ctermfg=darkcyan
-hi ErrorMsg	cterm=bold ctermfg=7 ctermbg=1
+hi ErrorMsg	cterm=bold ctermfg=lightred ctermbg=black
 hi IncSearch	cterm=NONE ctermfg=black ctermbg=green
 hi Search	cterm=NONE ctermfg=lightred ctermbg=darkgray
 hi MoreMsg	ctermfg=darkgreen

@@ -191,8 +191,8 @@ map <C-K> :Ack <C-R><C-W> <BAR> botright copen 10<CR>
 
 " ------------------------------------------------------------
 " Map C-o to CommandT
-map <C-O> :FufTaggedFile<CR>
-map <C-F> :FufTag<CR>
+map <C-O> :FZF<CR>
+" map <C-F> :FufTag<CR>
 
 " Specific to omnicompletion plugin which opens a preview window
 " to show stuff...close it when I don't need that anymore
@@ -216,3 +216,18 @@ set complete-=i
 " noremap <Down> <nop>
 " noremap <Left> <nop>
 " noremap <Right> <nop>
+
+function! SetIndentSpaces()
+	set tabstop=4
+	set shiftwidth=4
+	set expandtab
+endfunction
+
+function! SetIndentTabs()
+	set tabstop=8
+	set shiftwidth=8
+	set noexpandtab
+endfunction
+
+autocmd BufEnter,BufRead */kernel/*.\(c\|h\) call SetIndentTabs()
+autocmd BufEnter,BufRead */mm-video-v4l2/*.\(cpp\|c\|h\) call SetIndentSpaces()
