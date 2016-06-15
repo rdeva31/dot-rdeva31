@@ -3,6 +3,7 @@
 alias grep="grep -I --color=auto -n --exclude=tags " #GREPOPTIONS isn't working
 alias ggrep="git grep -pnI --break --color=auto "
 alias less="less -rgIM" #LESS env variable isn't working
+alias ls="ls --color=auto"
 
 #update path to include user's bin/
 export PATH=/usr/sbin:~/bin:/sbin:$PATH
@@ -10,7 +11,7 @@ export PAGER="less"
 export EDITOR="vim"
 export LESS="-rgIMXF"
 export GREPOPTIONS=" --color=always -n --exclude=tags"
-export PROMPT="[%n@%m:%c]%# "
+export PROMPT="[%n@%m:%c]$ "
 
 #colored man pages
 export LESS_TERMCAP_mb=$'\E[01;31m'
