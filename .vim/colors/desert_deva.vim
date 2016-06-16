@@ -103,7 +103,7 @@ hi Underlined	cterm=underline ctermfg=5
 hi Ignore	cterm=bold ctermfg=7
 hi Ignore	ctermfg=darkgrey
 hi Error	cterm=bold ctermfg=7 ctermbg=1
-hi Pmenu        ctermbg=black
-hi PmenuSel     cterm=underline
+hi Pmenu        ctermbg=black ctermfg=grey
+hi PmenuSel     ctermfg=darkgreen
 
 "vim: sw=4
