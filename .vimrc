@@ -229,5 +229,4 @@ function! SetIndentTabs()
 	set noexpandtab
 endfunction
 
-autocmd BufEnter,BufRead */kernel/*.\(c\|h\) call SetIndentTabs()
-autocmd BufEnter,BufRead */mm-video-v4l2/*.\(cpp\|c\|h\) call SetIndentSpaces()
+autocmd BufEnter,BufRead */linux/*.\(c\|h\) call SetIndentTabs()
