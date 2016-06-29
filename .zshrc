@@ -82,6 +82,8 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias cgrep=ag -S -G "\.(c|h)$"
+
 export PATH=/usr/sbin:~/bin:/sbin:$PATH
 export PAGER="less"
 export EDITOR="vim"
