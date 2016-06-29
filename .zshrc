@@ -82,7 +82,6 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias cgrep=ag -S -G "\.(c|h)$"
 
 export PATH=/usr/sbin:~/bin:/sbin:$PATH
 export PAGER="less"
@@ -91,3 +90,8 @@ export LESS="-rgIMXF"
 export GREPOPTIONS=" --color=always -n --exclude=tags"
 export PROMPT="[%n@%m:%c]$ "
 
+__cgrep()
+{
+	ag -S -G "\.(c|h)$" --pager $PAGER $@
+}
+alias cgrep=__cgrep
