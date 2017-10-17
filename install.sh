@@ -1,5 +1,5 @@
 sudo apt-get install aptitude
-sudo aptitude install tmux git vim zsh
+sudo aptitude install tmux git vim zsh exuberant-ctags silversearcher-ag
 
 cp -R .* ~
 rm -rf ~/.git ~/install.sh
