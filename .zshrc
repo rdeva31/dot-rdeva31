@@ -32,10 +32,11 @@ zstyle ':completion:*' verbose true
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
-export PS1="[%m% :${PWD/#$HOME/~}] $ "
+export PS1="[%m% :%1d]$ "
 
 #aliases
 alias ls="ls --color=always -h"
+alias ll="ls -lah"
 alias ko="kde-open"
 #ack-grep is slooooooooow
 #alias grep="ack-grep --color-match=red"
@@ -59,4 +60,3 @@ export LESS_TERMCAP_se=$'\E[0m'
 export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
-
