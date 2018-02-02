@@ -46,7 +46,7 @@ alias less="less -rgIM" #LESS env variable isn't working
 alias omnitags="ctags -R --sort=1 --c++-kinds=+p --fields=+iaS --extra=+q --language-force=C++ *"
 
 #update path to include user's bin/
-export PATH=/usr/sbin:~/bin:/sbin:$PATH
+export PATH=/usr/sbin:/home/`whoami`/.local/bin/:~/bin:/sbin:/usr/local/go/bin:$PATH
 export PAGER="less"
 export EDITOR="vim"
 export LESS="-rgIM "
