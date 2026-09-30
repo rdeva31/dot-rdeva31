@@ -31,6 +31,11 @@ vim.opt.number = true
 -- and copy work normally). Neovim defaults to mouse="nvi", which intercepts it.
 vim.opt.mouse = ""
 
+-- Leave the terminal cursor shape alone (inherit the terminal's block cursor)
+-- instead of Neovim's default bar (|) in insert mode. This makes the Telescope
+-- prompt and insert mode use a block cursor, matching Vim's behavior.
+vim.opt.guicursor = ""
+
 -- Personal desert colorscheme (~/.config/nvim/colors/desert_deva.vim).
 -- Force the cterm (256-color) palette so Neovim matches Vim. termguicolors is
 -- explicitly disabled (not just omitted) because Neovim auto-enables truecolor
@@ -70,7 +75,51 @@ require("lazy").setup({
     { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
   },
   config = function()
-    require("telescope").load_extension("fzf")  -- activate fzf-native
+    local telescope = require("telescope")
+
+    telescope.setup({
+      defaults = {
+        -- fzf-native is the fast C sorter (libfzf.so is built).
+        sorting_strategy = "ascending",
+        cache_picker = { num_pickers = 10 },   -- reuse recent pickers instead of rebuilding
+
+        -- ---- Compact floating window, fzf-flavored styling ----
+        -- Centered floating box (not docked). Prompt on top.
+        layout_strategy = "horizontal",
+        layout_config = {
+          horizontal = {
+            width = 0.7,                        -- 70% of screen width
+            height = 0.5,                       -- 50% of screen height
+            prompt_position = "top",
+            preview_width = 0.5,                -- only used by pickers that preview
+          },
+        },
+        results_title = false,
+        dynamic_preview_title = false,
+        prompt_prefix = "> ",                   -- fzf's prompt marker
+        selection_caret = "> ",                 -- fzf's pointer
+        entry_prefix = "  ",
+        -- Normal rounded box borders for the floating window.
+        border = true,
+        borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+        preview = {
+          -- Kept only for pickers that opt in (tags); skip big/slow files.
+          filesize_limit = 1,
+          timeout = 150,
+          treesitter = false,
+        },
+      },
+      pickers = {
+        find_files = {
+          -- Use ripgrep for discovery (fd isn't installed). Fast, and prunes
+          -- .git automatically. --files lists files honoring .gitignore.
+          find_command = { "rg", "--files", "--hidden", "--glob", "!.git/*" },
+          previewer = false,                    -- file names are self-explanatory
+        },
+      },
+    })
+
+    telescope.load_extension("fzf")  -- activate fzf-native (C sorter)
     local builtin = require("telescope.builtin")
 
     local pickers    = require("telescope.pickers")
@@ -99,6 +148,33 @@ require("lazy").setup({
         return
       end
 
+      -- Rank matches so the actual DEFINITION appears first. taglist() entries
+      -- carry a ctags "kind" letter; lower rank = shown higher. For a struct
+      -- like i2c_client this puts the `struct` tag (include/linux/i2c.h, kind s)
+      -- above the hundreds of `member` tags (kind m) that also match the name.
+      local kind_rank = {
+        s = 1,  -- struct
+        t = 2,  -- typedef
+        g = 3,  -- enum
+        u = 4,  -- union
+        c = 5,  -- class
+        f = 6,  -- function definition
+        p = 7,  -- function prototype
+        d = 8,  -- macro / #define
+        e = 20, -- enumerator
+        m = 21, -- struct/union member
+        v = 22, -- variable
+      }
+      local function rank(t)
+        return kind_rank[t.kind or ""] or 15   -- unknown kinds land in the middle
+      end
+      -- Stable sort: primary by kind rank, tiebreak by filename for determinism.
+      table.sort(matches, function(a, b)
+        local ra, rb = rank(a), rank(b)
+        if ra ~= rb then return ra < rb end
+        return (a.filename or "") < (b.filename or "")
+      end)
+
       -- Single match: jump straight there, just like native <C-]>.
       if #matches == 1 then
         vim.cmd("tag " .. word)
@@ -112,16 +188,24 @@ require("lazy").setup({
           results = matches,
           entry_maker = function(t)
             local kind = t.kind or "?"
+            -- Human-readable kind label so the definition is obvious at a glance.
+            local kind_label = ({
+              s = "struct", t = "typedef", g = "enum", u = "union",
+              c = "class", f = "func", p = "proto", d = "macro",
+              e = "enumer", m = "member", v = "var",
+            })[kind] or kind
             return {
               value = t,
-              -- Show kind + defining file so duplicates are distinguishable.
-              display = string.format("%-2s %s", kind, t.filename),
+              display = string.format("%-8s %s", kind_label, t.filename),
               ordinal = (t.filename or "") .. " " .. kind,
               filename = t.filename,
             }
           end,
         }),
-        sorter = conf.generic_sorter({}),
+        -- highlighter=false / discard sorter preserves the definition-first order
+        -- we set with table.sort above when the prompt is empty, while still
+        -- allowing substring filtering as you type.
+        sorter = require("telescope.sorters").get_substr_matcher(),
         previewer = conf.grep_previewer({}),
         attach_mappings = function(prompt_bufnr)
           actions.select_default:replace(function()
@@ -152,8 +236,9 @@ require("lazy").setup({
     vim.keymap.set("n", "g]", builtin.tags, { desc = "Tags (fuzzy browse)" })
 
     -- <C-o>: Telescope file finder. NOTE: this shadows the built-in normal-mode
-    -- <C-o> (jumplist-back). Insert-mode <C-o> is untouched. Use <C-i>/<Tab> to
-    -- go forward in the jumplist; jumplist-back is available via :ju or a remap.
+    -- <C-o> (jumplist-back). Insert-mode <C-o> is untouched.
+    -- Discovery (ripgrep) and previewer=false are configured in telescope.setup
+    -- above, so this is just the plain builtin.
     vim.keymap.set("n", "<C-o>", builtin.find_files, { desc = "Find files (Telescope)" })
   end,
 }
