@@ -99,9 +99,22 @@ require("lazy").setup({
         prompt_prefix = "> ",                   -- fzf's prompt marker
         selection_caret = "> ",                 -- fzf's pointer
         entry_prefix = "  ",
-        -- Normal rounded box borders for the floating window.
+        -- Plain ASCII box borders (no Unicode box-drawing glyphs).
+        -- Order: { top, right, bottom, left, tl, tr, br, bl }
         border = true,
-        borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+        borderchars = { "-", "|", "-", "|", "+", "+", "+", "+" },
+
+        mappings = {
+          i = {
+            -- Ctrl-U clears the whole prompt line (readline-style), instead of
+            -- Telescope's default of scrolling the preview up.
+            ["<C-u>"] = function(prompt_bufnr)
+              require("telescope.actions.state")
+                .get_current_picker(prompt_bufnr)
+                :reset_prompt()
+            end,
+          },
+        },
         preview = {
           -- Kept only for pickers that opt in (tags); skip big/slow files.
           filesize_limit = 1,
