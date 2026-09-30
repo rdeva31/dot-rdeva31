@@ -230,3 +230,8 @@ function! SetIndentTabs()
 endfunction
 
 autocmd BufEnter,BufRead */linux/*.\(c\|h\) call SetIndentTabs()
+
+call plug#begin()
+ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+ Plug 'junegunn/fzf.vim'
+call plug#end()
